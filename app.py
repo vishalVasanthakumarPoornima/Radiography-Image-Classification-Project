@@ -202,22 +202,42 @@ def get_class_info(predicted_label):
         'COVID': {
             'description': 'COVID-19 pneumonia detected',
             'color': '#FF6B6B',
-            'icon': '🦠'
+            'icon': '🦠',
+            'links': [
+                {'title': 'WHO COVID-19 Information', 'url': 'https://www.who.int/emergencies/diseases/novel-coronavirus-2019'},
+                {'title': 'CDC COVID-19 Guidelines', 'url': 'https://www.cdc.gov/coronavirus/2019-ncov/index.html'},
+                {'title': 'COVID-19 Treatment Guidelines', 'url': 'https://www.covid19treatmentguidelines.nih.gov/'}
+            ]
         },
         'Lung_Opacity': {
             'description': 'Lung opacity detected',
             'color': '#4ECDC4',
-            'icon': '🫁'
+            'icon': '🫁',
+            'links': [
+                {'title': 'Lung Opacity Information', 'url': 'https://www.mayoclinic.org/diseases-conditions/pneumonia/symptoms-causes/syc-20354204'},
+                {'title': 'Chest X-ray Interpretation', 'url': 'https://www.radiologyinfo.org/en/info/chestrad'},
+                {'title': 'Pulmonary Medicine Resources', 'url': 'https://www.thoracic.org/patients/'}
+            ]
         },
         'Normal': {
             'description': 'Normal chest X-ray',
             'color': '#45B7D1',
-            'icon': '✅'
+            'icon': '✅',
+            'links': [
+                {'title': 'Healthy Lungs Information', 'url': 'https://www.lung.org/lung-health-diseases/how-lungs-work'},
+                {'title': 'Preventive Care Guidelines', 'url': 'https://www.cdc.gov/prevention/index.html'},
+                {'title': 'Respiratory Health Tips', 'url': 'https://www.who.int/news-room/fact-sheets/detail/chronic-respiratory-diseases'}
+            ]
         },
         'Viral Pneumonia': {
             'description': 'Viral pneumonia detected',
             'color': '#96CEB4',
-            'icon': '🦠'
+            'icon': '🦠',
+            'links': [
+                {'title': 'Viral Pneumonia Overview', 'url': 'https://www.mayoclinic.org/diseases-conditions/pneumonia/symptoms-causes/syc-20354204'},
+                {'title': 'Pneumonia Treatment', 'url': 'https://www.cdc.gov/pneumonia/treatment.html'},
+                {'title': 'Respiratory Infections Guide', 'url': 'https://www.who.int/news-room/fact-sheets/detail/pneumonia'}
+            ]
         }
     }
     return info.get(predicted_label, info['Normal'])
@@ -291,7 +311,7 @@ if uploaded_file is not None and model is not None:
                 else:
                     # Convert BGR to RGB for display
                     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                    st.image(img_rgb, caption="Chest X-ray Image", use_column_width=True)
+                    st.image(img_rgb, caption="Chest X-ray Image", use_container_width=True)
                 
                 # Image statistics
                 st.markdown("**Image Details:**")
@@ -368,6 +388,14 @@ if uploaded_file is not None and model is not None:
                     st.markdown("🟡 **Moderate confidence** - Consider additional tests")
                 else:
                     st.markdown("🔴 **Low confidence** - Requires further evaluation")
+            
+            # Classification-specific resources
+            st.markdown("### 🔗 Relevant Resources")
+            st.markdown(f"**Resources for {predicted_label}:**")
+            
+            class_info = get_class_info(predicted_label)
+            for link in class_info['links']:
+                st.markdown(f"- [{link['title']}]({link['url']})")
             
             st.markdown('</div>', unsafe_allow_html=True)
             
